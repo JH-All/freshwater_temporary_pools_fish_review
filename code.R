@@ -18,12 +18,12 @@ Figure_1 <- year_count %>%
   geom_line(color = "black", size = 1.5)+
   geom_point(size = 7, pch = 21, bg = "black",
              col = "white", alpha = 1)+
-  scale_y_continuous(expand = c(0.01,0), breaks = seq(0, 110, by = 10),
-                     limits = c(0,115))+
-  scale_x_continuous(breaks = seq(1980, 2023, by = 1),
-                     limits = c(1980, 2023.5),
+  scale_y_continuous(expand = c(0.01,0), breaks = seq(0, 120, by = 10),
+                     limits = c(0,120))+
+  scale_x_continuous(breaks = seq(1980, 2025, by = 5),
+                     limits = c(1980, 2025.5),
                      expand = c(0,0))+
-  theme_linedraw(base_size = 15)+
+  theme_linedraw(base_size = 20)+
   theme(axis.text.x=element_text( 
     angle = 45, hjust = 1))+
   labs(x = NULL, y = "Cumulative number of studies")
@@ -57,7 +57,7 @@ f2a <- ggplot(country_df) +
 country_year_count <- data %>% 
   count(country, year)
 
-country_year_count <- country_year_count[-c(62:66),]
+country_year_count <- country_year_count[-c(66:70),]
 
 top_countries <- country_year_count %>%
   group_by(country) %>%
@@ -76,7 +76,7 @@ country_year_count <- country_year_count %>%
     year %in% 1991:2000 ~ "1991-2000",
     year %in% 2001:2010 ~ "2001-2010",
     year %in% 2011:2020 ~ "2011-2020",
-    year %in% 2021:2023 ~ "2021-2023"
+    year %in% 2021:2024 ~ "2021-2024"
   ))
 
 result <- country_year_count %>%
@@ -102,7 +102,7 @@ f2b <- result %>%
        fill = "Years")+
   scale_y_continuous(expand = c(0,0),
                      breaks = seq(0, 45, by = 5),
-                     limits = c(0,45))+
+                     limits = c(0,46))+
   scale_fill_brewer(palette="BrBG",
                     direction = -1)
 
@@ -126,8 +126,8 @@ p1 <- family_count %>%
   geom_bar(stat = "identity", width = 0.8,
            fill = "darkslategrey", color = "black")+
   labs(x = NULL, y = "Percentage of studies (%)")+
-  scale_y_continuous(expand = c(0,0), breaks = seq(0, 70, by = 10),
-                     limits = c(0,70))+
+  scale_y_continuous(expand = c(0,0), breaks = seq(0, 75, by = 15),
+                     limits = c(0,75))+
   theme_classic(base_size = 18)+
   coord_flip()
 
@@ -196,14 +196,15 @@ Figure_4 = family_counts %>%
             alpha = 0.9, show.legend = FALSE)+
   geom_point(size = 5, pch = 21,
              col = "black",alpha = 0.9)+
-  ylim(0,70)+
+  ylim(0,80)+
   labs(x = "Year", y = "Cumulative number of studies", 
        fill = "Fish clade") +
   #facet_wrap(~family, nrow = 3,
   #          scales = "free")+
   scale_fill_viridis_d(end = 0.5, direction = -1) +  
   scale_color_viridis_d(end = 0.5, direction = -1) +
-  scale_x_continuous(breaks = seq(1980, 2023, by = 5))+
+  scale_x_continuous(breaks = seq(1980, 2025, by = 5),
+                     limits = c(1980, 2025))+
   theme_linedraw(base_size = 16)+
   theme(strip.text = element_text(size = 15),
         legend.position = c(0.02, 0.96),  
@@ -228,14 +229,15 @@ topic_counts$count <- replace(topic_counts$count,
 topic_counts$topic <- factor(topic_counts$topic,
                              levels = c("Reproduction",
                                         "Taxonomy",
-                                        "Community ecology",
                                         "Genetics",
+                                        "Community ecology",
                                         "Physiology",
                                         "Trophic ecology",
                                         "Species interactions",
                                         "Behavior",
                                         "New occurrences",
-                                        "Ecotoxicology"))
+                                        "Ecotoxicology",
+                                        "Parasitology"))
 
 topic_counts$topic <- factor(topic_counts$topic, 
                              levels = rev(levels(topic_counts$topic)) )
@@ -285,7 +287,7 @@ cor.test(authors$single_authors, authors$n_papers_year,
 cor.test(authors$authors_per_paper_mean, authors$n_papers_year,
          method = "spearman")
 
-# Figure S1 ----------------------
+# Figure S3 ----------------------
 aut1 = authors %>% 
   ggplot(aes(x = single_authors, y = n_papers_year))+
   geom_smooth(method = "glm",
@@ -313,9 +315,9 @@ aut2 = authors %>%
 aut3 = plot_grid(aut1, aut2, labels = "AUTO",
                  nrow = 1)
 aut3
-ggsave("Figure_S1.jpg", aut3, width = 10)
+ggsave("Figure_S3.jpg", aut3, width = 10)
 
-# Figure S2 --------------------
+# Figure S5 --------------------
 sp_year = read_excel("description_year_Rivulidae.xlsx")
 
 
@@ -326,54 +328,22 @@ sp_year_df = sp_year %>%
 
 min(sp_year_df$description_year)
 
-fig_s2 = sp_year_df %>%
+fig_s5 = sp_year_df %>%
   ggplot(aes(x = description_year, y = count))+
   geom_bar(stat = "identity", width = 1,
            color = "black",
            fill = "cyan4")+
-  scale_x_continuous(limits = c(1860, 2024),
-                     breaks = seq(1860, 2024, by = 5))+
-  scale_y_continuous(limits = c(0,4),
-                     breaks = seq(0, 4, by = 1),
+  scale_x_continuous(limits = c(1860, 2025),
+                     breaks = seq(1860, 2025, by = 5))+
+  scale_y_continuous(limits = c(0,5),
+                     breaks = seq(0, 5, by = 1),
                      expand = c(0,0))+
   theme_classic(base_size = 12)+
   theme(axis.text.x=element_text( 
     angle = 90, hjust = 1))+
   labs(x = "Years", y =  "Number of Rivulidae species described")
 
-ggsave("Figure_S2.jpg", fig_s2)
-
-# Figure S3 ----------------------------
-subfamily = read_excel("subfamily.xlsx")
-
-subfamily %>% 
-  count(subfamily)
-
-subfamily_count <- subfamily %>%
-  group_by(subfamily, topic) %>%
-  summarize(count = n(), .groups = "drop") %>% 
-  group_by(subfamily) %>%
-  mutate(percentage = (count / sum(count)) * 100)
-
-subfamily_count$topic = as.factor(subfamily_count$topic )
-subfamily_count$topic = factor(subfamily_count$topic ,
-                               levels = c("Taxonomy", "Reproduction", "Genetics",
-                                          "Physiology", "Behavior", "Trophic ecology",
-                                          "Community ecology", "New occurrences",
-                                          "Species interactions"))
-
-fig_s3 = subfamily_count %>% 
-  ggplot(aes(x= subfamily, y = percentage,
-             fill = topic))+
-  geom_bar(stat = "identity", width = 0.6,
-           color = "black")+
-  scale_fill_brewer(palette = "Paired")+
-  scale_y_continuous(expand = c(0,0))+
-  labs(x = NULL, y = "Percentage (%)",
-       fill = "Study topic")+
-  theme_classic(base_size = 12)
-
-ggsave("Figure_S3.jpg", fig_s3)
+ggsave("Figure_S5.jpg", fig_s5)
 
 # Segmented regression ---------------------
 rivulidae_data <- data %>% filter(family == "Rivulidae")
@@ -399,8 +369,8 @@ points(artigos_por_ano$year, artigos_por_ano$n,
 )
 ?points
 
-# Figure S4 ----------------
-png("Figure_S4.png", width = 8, height = 6, units = "in", res = 300)
+# Figure S7 ----------------
+png("Figure_S7.png", width = 8, height = 6, units = "in", res = 300)
 
 plot(modelo_segmentado_v2, xlab = "Year", lwd = 2)
 points(artigos_por_ano$year, artigos_por_ano$n, 
