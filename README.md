@@ -16,4 +16,5 @@ This is a repository with the data analysis codes of the developed work, aiming 
 
           - authors_per_year.xlsx      # Number of papers, average number of authors per paper and number of unique authors per year
           - description_year_Rivulidae.xlsx  # Year of first description of these Rivulidae species
+          - countries.xlsx  # Countries informations regarding: number of published papers, population size, land area in km2 and researchers
   
