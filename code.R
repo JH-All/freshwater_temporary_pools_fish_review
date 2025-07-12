@@ -111,6 +111,34 @@ Figure_2 <- plot_grid(f2a, f2b,
 
 ggsave("Figure_2.jpg", width = 15, height = 13)
 
+# Normalized countries scientific production -----------------
+countries_pred = read_excel("countries.xlsx")
+str(countries_pred)
+countries_pred$Land_area_km2 = as.numeric(countries_pred$Land_area_km2)
+
+countries_pred <- countries_pred %>%
+  mutate(
+    papers_per_million_pop = n_papers / (population / 1e6),
+    papers_per_million_km = n_papers / (Land_area_km2 / 1e6),
+    papers_per_researchers = n_papers / (researchers_per_million)
+  )
+
+ggplot(countries_pred, aes(x = reorder(country, papers_per_million_pop), 
+                   y = papers_per_million_pop)) +
+  geom_bar(stat = "identity") +
+  coord_flip() 
+
+ggplot(countries_pred, aes(x = reorder(country,  papers_per_million_km), 
+                           y =   papers_per_million_km)) +
+  geom_bar(stat = "identity") +
+  coord_flip() 
+
+ggplot(countries_pred, aes(x = reorder(country,    papers_per_researchers), 
+                           y =     papers_per_researchers)) +
+  geom_bar(stat = "identity") +
+  coord_flip() 
+
+
 # Figure 3 -----------------------
 ## Groups
 family_count <- data %>% 
@@ -346,7 +374,8 @@ fig_s5 = sp_year_df %>%
 ggsave("Figure_S5.jpg", fig_s5)
 
 # Segmented regression ---------------------
-rivulidae_data <- data %>% filter(family == "Rivulidae")
+rivulidae_data <- data %>% filter(family == "Rivulidae") %>% 
+  filter(country == "Brazil")
 artigos_por_ano <- rivulidae_data %>% count(year)
 modelo_linear <- lm(n ~ year, data = artigos_por_ano)
 
@@ -362,7 +391,7 @@ points(artigos_por_ano$year, artigos_por_ano$n)
 modelo_segmentado_v2 <- segmented(modelo_linear, seg.Z = ~year)
 summary(modelo_segmentado_v2)
 plot(modelo_segmentado_v2,
-     xlab = "Year", lwd = 2)
+     xlab = "Year", lwd = 2, col = "black")
 points(artigos_por_ano$year, artigos_por_ano$n,
        pch = 21, cex = 1.6, col = "black",
        bg = "grey"
@@ -372,7 +401,8 @@ points(artigos_por_ano$year, artigos_por_ano$n,
 # Figure S7 ----------------
 png("Figure_S7.png", width = 8, height = 6, units = "in", res = 300)
 
-plot(modelo_segmentado_v2, xlab = "Year", lwd = 2)
+plot(modelo_segmentado_v2, xlab = "Year", lwd = 2, ylim = c(0, 5),
+     col = "black")
 points(artigos_por_ano$year, artigos_por_ano$n, 
        pch = 21, cex = 2, col = "black", bg = "grey")
 
